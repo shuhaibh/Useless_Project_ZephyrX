@@ -8,8 +8,8 @@
 </head>
 <body>
 
-  <p style="font-size: 48px; color:black; font-family: Snap ITC; text-align:center;">Clean behind the Screen</p>
-
+  <p style="font-size: 52px; color:black; font-family: Snap ITC; text-align:center;user-select: none">Clean Behind The Screen</p>
+  
   <style>
     body {
       margin: 0;
@@ -32,6 +32,7 @@
       background-repeat: no-repeat;
       pointer-events: none;
       transition: opacity 0.5s;
+      z-index: -1;
     }
   </style>
 
@@ -108,7 +109,8 @@
           const dirtY = rect.top + rect.height / 2;
 
           const distance = Math.hypot(cursorX - dirtX, cursorY - dirtY);
-          if (distance < 25) {
+          if (distance < 40
+          ) {
             dirt.style.opacity = 0;
             setTimeout(() => {
               dirt.remove();

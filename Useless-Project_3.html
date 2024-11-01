@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fullscreen CSS Squeegee Cleaner</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        overflow: hidden; /* Prevent scrolling */
+      }
+
+      #screen {
+        width: 100vw;
+        height: 100vh;
+        background-color: #ffffff;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+      }
+
+      #squeegee {
+        position: absolute;
+        width: 120px; /* Width of the squeegee */
+        height: 5px; /* Height of the squeegee */
+        background-color: #a1a2a3; /* Squeegee color */
+        border-radius: 10px; /* Rounded edges */
+        top: 50%;
+        left: -120px; /* Start off-screen */
+        transform: translateY(-50%);
+        transition: left 1s ease;
+      }
+
+      #handle {
+        position: absolute;
+        width: 10px; /* Width of the handle */
+        height: 120px; /* Height of the handle */
+        background-color: #333; /* Handle color */
+        top: calc(50% - 30px); /* Center the handle */
+        left: 55px; /* Center the handle on the squeegee */
+        border-radius: 5px; /* Rounded edges for the handle */
+      }
+
+      .soap {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        background: rgba(255, 255, 255, 0.5);
+        border-radius: 50%;
+        pointer-events: none;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+      }
+
+      #cleanButton {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        z-index: 10; /* Ensure button is above other elements */
+      }
+    </style>
+  </head>
+  <body>
+    <div id="screen">
+      <div id="squeegee">
+        <div id="handle"></div>
+      </div>
+      <div class="soap" id="soapEffect"></div>
+    </div>
+    <button id="cleanButton">Clean Screen</button>
+
+    <script>
+      document
+        .getElementById("cleanButton")
+        .addEventListener("click", function () {
+          const squeegee = document.getElementById("squeegee");
+          const soapEffect = document.getElementById("soapEffect");
+
+          // Reset position
+          squeegee.style.left = "-120px"; // Start off-screen
+          soapEffect.style.opacity = 0; // Hide soap effect
+
+          // Trigger the cleaning effect
+          setTimeout(() => {
+            squeegee.style.left = "100vw"; // Move squeegee across the screen
+            soapEffect.style.opacity = 1; // Show soap effect
+          }, 100); // Small delay before starting the animation
+
+          // Reset the effect after animation
+          setTimeout(() => {
+            squeegee.style.left = "-120px"; // Move it back off-screen
+            soapEffect.style.opacity = 0; // Hide soap effect
+          }, 1100); // Duration should match the CSS transition
+        });
+    </script>
+  </body>
+</html>

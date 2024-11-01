@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Running Stickman</title>
+  <style>
+    body, html {
+      height: 100%;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background-color: #87CEEB; /* Sky blue background */
+    }
+    canvas {
+      background-color: #FFFFFF;
+      border: 2px solid #000;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="gameCanvas" width="800" height="600"></canvas>
+
+  <script>
+    const canvas = document.getElementById("gameCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Stickman properties
+    let stickman = {
+      x: canvas.width / 2,
+      y: 0,
+      width: 10,
+      height: 50,
+      color: "black",
+      speed: 5,
+      fallSpeed: 2,
+      isMovingLeft: false,
+      isMovingRight: false,
+      legPosition: 0
+    };
+
+    // Event listeners for key presses
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowRight") {
+        stickman.isMovingRight = true;
+      } else if (event.key === "ArrowLeft") {
+        stickman.isMovingLeft = true;
+      }
+    });
+
+    document.addEventListener("keyup", (event) => {
+      if (event.key === "ArrowRight") {
+        stickman.isMovingRight = false;
+      } else if (event.key === "ArrowLeft") {
+        stickman.isMovingLeft = false;
+      }
+    });
+
+    // Update position and leg animation
+    function update() {
+      // Falling logic
+      stickman.y += stickman.fallSpeed;
+
+      // Side-to-side movement
+      if (stickman.isMovingRight) {
+        stickman.x += stickman.speed;
+        stickman.legPosition = (stickman.legPosition + 1) % 20; // Cycle leg positions
+      } 
+      if (stickman.isMovingLeft) {
+        stickman.x -= stickman.speed;
+        stickman.legPosition = (stickman.legPosition + 1) % 20; // Cycle leg positions
+      }
+
+      // Looping effect for endless movement
+      if (stickman.x > canvas.width) stickman.x = 0;
+      if (stickman.x < 0) stickman.x = canvas.width;
+
+      // Stop falling at the bottom
+      if (stickman.y + stickman.height > canvas.height) {
+        stickman.y = canvas.height - stickman.height;
+      }
+    }
+
+    // Render stickman with "running" effect
+    function drawStickman() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      
+      // Draw body
+      ctx.fillStyle = stickman.color;
+      ctx.fillRect(stickman.x, stickman.y, stickman.width, stickman.height);
+
+      // Draw head
+      ctx.beginPath();
+      ctx.arc(stickman.x + stickman.width / 2, stickman.y - 10, 10, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Draw legs with simple running animation
+      ctx.beginPath();
+      if (stickman.legPosition < 10) {
+        // Left leg forward, right leg back
+        ctx.moveTo(stickman.x, stickman.y + stickman.height);
+        ctx.lineTo(stickman.x - 10, stickman.y + stickman.height + 20);
+        
+        ctx.moveTo(stickman.x + stickman.width, stickman.y + stickman.height);
+        ctx.lineTo(stickman.x + stickman.width + 10, stickman.y + stickman.height + 20);
+      } else {
+        // Right leg forward, left leg back
+        ctx.moveTo(stickman.x, stickman.y + stickman.height);
+        ctx.lineTo(stickman.x + 10, stickman.y + stickman.height + 20);
+        
+        ctx.moveTo(stickman.x + stickman.width, stickman.y + stickman.height);
+        ctx.lineTo(stickman.x - 10, stickman.y + stickman.height + 20);
+      }
+      ctx.stroke();
+    }
+
+    // Main game loop
+    function gameLoop() {
+      update();
+      drawStickman();
+      requestAnimationFrame(gameLoop);
+    }
+
+    // Start the game loop
+    gameLoop();
+  </script>
+</body>
+</html>
+

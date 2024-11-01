@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Screen Cleaner with Bubbles</title>
+    <style>
+      body {
+        margin: 0;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100vh;
+        background-color: #f0f0f0;
+        font-family: Arial, sans-serif;
+        position: relative;
+      }
+
+      /* Squeegee Styling */
+      #squeegee {
+        position: absolute;
+        width: 120px; /* Full squeegee width */
+        height: 100%; /* Full screen height */
+        background-color: rgba(0, 0, 0, 0.2); /* Darker bar for visibility */
+        display: none; /* Hidden initially */
+        z-index: 2;
+      }
+
+      /* Start Button Styling */
+      #startBtn {
+        padding: 10px 20px;
+        font-size: 18px;
+        cursor: pointer;
+        position: absolute;
+        bottom: 20px;
+        z-index: 10;
+      }
+
+      /* Bubble Styling */
+      .bubble {
+        position: absolute;
+        width: 80px;
+        height: 80px;
+        background-image: url('https://media.istockphoto.com/id/1369351889/vector/transparent-water-realistic-glass-bubbles-bubbles-jpg-vector-jpg.jpg?s=612x612&w=0&k=20&c=U7ygHjp3bRW9vbjMZYFwCS1trvxMBUYrYLQIjfAvygQ='); /* Bubble image */
+        background-size: cover;
+        opacity: 0.9;
+        z-index: 1;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="squeegee"></div>
+    <button id="startBtn">Start Cleaning</button>
+
+    <script>
+      const squeegee = document.getElementById("squeegee");
+      const startBtn = document.getElementById("startBtn");
+
+      // Function to create bubbles across the screen
+      function createBubbles() {
+        for (let i = 0; i < 15; i++) {
+          // Number of bubbles
+          const bubble = document.createElement("div");
+          bubble.classList.add("bubble");
+          // Random position for each bubble
+          bubble.style.top = `${Math.random() * window.innerHeight}px`;
+          bubble.style.left = `${Math.random() * window.innerWidth}px`;
+          document.body.appendChild(bubble);
+        }
+      }
+
+      // Start cleaning animation
+      function startCleaning() {
+        squeegee.style.display = "block"; // Show squeegee
+        let x = 0; // Starting horizontal position
+        let y = 0; // Starting vertical position
+        let direction = 1; // 1 for right, -1 for left
+
+        const interval = setInterval(() => {
+          // Move squeegee horizontally across the screen
+          squeegee.style.transform = `translate(${x}px, ${y}px)`;
+          x += 30 * direction; // Move right or left based on direction
+
+          // Reverse direction when reaching screen edges and move down
+          if (x > window.innerWidth || x < -squeegee.offsetWidth) {
+            direction *= -1; // Change direction
+            x += 30 * direction; // Adjust position
+            y += 120; // Move down after each pass
+
+            // Remove bubbles that the squeegee "cleans"
+            const bubbles = document.querySelectorAll(".bubble");
+            bubbles.forEach((bubble) => {
+              const bubbleRect = bubble.getBoundingClientRect();
+              if (bubbleRect.top < y && bubbleRect.bottom > y - 120) {
+                bubble.style.opacity = 0; // Fade out bubbles in the cleaned area
+              }
+            });
+          }
+
+          // Stop when squeegee reaches the bottom
+          if (y > window.innerHeight) {
+            clearInterval(interval);
+            squeegee.style.display = "none"; // Hide squeegee after finishing
+          }
+        }, 80); // Slow down for realistic effect
+      }
+
+      // Create bubbles when the page loads
+      createBubbles();
+      startBtn.addEventListener("click", startCleaning);
+    </script>
+  </body>
+</html>

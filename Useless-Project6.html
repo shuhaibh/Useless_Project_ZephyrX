@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bubble Cursor Effect</title>
+  <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
+</head>
+<body>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+    }
+    .custom-cursor {
+            cursor: url('C:\Users\shuha\Downloads\Sponge.png'), auto; /* Fallback */
+        }
+  </style>
+  
+<body class="custom-cursor"  style="width: 100%; height: 100vh;">
+  <script>
+    // Initialize the Bubble Cursor Effect after the window fully loads
+    window.addEventListener("load", () => {
+      if (window.cursoreffects && window.cursoreffects.bubbleCursor) {
+        new window.cursoreffects.bubbleCursor({
+          size: 8,
+          colors: ["#FF6347", "#87CEEB", "#32CD32"],
+          particles: 20,
+        });
+      } else {
+        console.error("Bubble Cursor effect is not available.");
+      }
+    });
+  </script>
+</body>
+</html>

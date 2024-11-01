@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Screen Cleaner Effect</title>
+  <script src="https://unpkg.com/cursor-effects@latest/dist/browser.js"></script>
+</head>
+<body>
+
+  <p style="font-size: 48px; color:black; font-family: Snap ITC; text-align:center;">Clean behind the Screen</p>
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #f0f0f0;
+      position: relative;
+      overflow: hidden;
+    }
+    .custom-cursor {
+      cursor: url('Sponge.png'), auto;
+    }
+    .dirt {
+      position: absolute;
+      width: 60px;
+      height: 60px;
+      background-size: cover;
+      background-repeat: no-repeat;
+      pointer-events: none;
+      transition: opacity 0.5s;
+    }
+  </style>
+
+<body class="custom-cursor">
+  
+  <script>
+    window.addEventListener("load", () => {
+      if (window.cursoreffects && window.cursoreffects.bubbleCursor) {
+        new window.cursoreffects.bubbleCursor({
+          size: 8,
+          colors: ["#FF6347", "#87CEEB", "#32CD32"],
+          particles: 20,
+        });
+      } else {
+        console.error("Bubble Cursor effect is not available.");
+      }
+
+      const dirtImages = [
+        'mud1.png',
+        'mud2.png',
+        'mud3.png',
+        'mud4.png',
+        'mud5.png',
+        'mud6.png'
+      ];
+
+      function createDirt() {
+        const dirt = document.createElement("div");
+        dirt.classList.add("dirt");
+
+        const randomImage = dirtImages[Math.floor(Math.random() * dirtImages.length)];
+        dirt.style.backgroundImage = `url('${randomImage}')`;
+
+        dirt.style.top = `${Math.random() * 100}vh`;
+        dirt.style.left = `${Math.random() * 100}vw`;
+        document.body.appendChild(dirt);
+
+        dirt.addEventListener("mousemove", (e) => {
+          const cursorX = e.clientX;
+          const cursorY = e.clientY;
+
+          document.querySelectorAll(".dirt").forEach(dirt => {
+            const rect = dirt.getBoundingClientRect();
+            const dirtX = rect.left + rect.width / 2;
+            const dirtY = rect.top + rect.height / 2;
+
+            const distance = Math.hypot(cursorX - dirtX, cursorY - dirtY);
+            if (distance < 25) {
+              dirt.style.opacity = 0;
+              setTimeout(() => {
+                dirt.remove();
+                createDirt(); // Add new dirt spot after removal
+              }, 500);
+            }
+          });
+        });
+      }
+
+      function generateInitialDirtSpots() {
+        for (let i = 0; i < 20; i++) {
+          createDirt();
+        }
+      }
+
+      generateInitialDirtSpots();
+
+      document.addEventListener("mousemove", (e) => {
+        const cursorX = e.clientX;
+        const cursorY = e.clientY;
+
+        document.querySelectorAll(".dirt").forEach(dirt => {
+          const rect = dirt.getBoundingClientRect();
+          const dirtX = rect.left + rect.width / 2;
+          const dirtY = rect.top + rect.height / 2;
+
+          const distance = Math.hypot(cursorX - dirtX, cursorY - dirtY);
+          if (distance < 25) {
+            dirt.style.opacity = 0;
+            setTimeout(() => {
+              dirt.remove();
+              createDirt();
+            }, 500);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

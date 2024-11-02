@@ -20,9 +20,19 @@
       background-color: #f0f0f0;
       position: relative;
       overflow: hidden;
+      cursor: none;
     }
+    /* Custom cursor */
     .custom-cursor {
-      cursor: url('Sponge.png'), auto;
+      position: fixed;
+      width: 120px; /* Larger size */
+      height: 120px;
+      background-image: url('Sponge-Big.png');
+      background-size: cover;
+      background-repeat: no-repeat;
+      pointer-events: none; /* Allow clicks through the custom cursor */
+      transform: translate(-50%, -50%); /* Center the image */
+      z-index: 1000;
     }
     .dirt {
       position: absolute;
@@ -36,8 +46,9 @@
     }
   </style>
 
-<body class="custom-cursor">
-  
+<body >
+  <div class="custom-cursor" id="customCursor"></div>
+
   <script>
     window.addEventListener("load", () => {
       if (window.cursoreffects && window.cursoreffects.bubbleCursor) {
@@ -120,6 +131,12 @@
         });
       });
     });
+    const customCursor = document.getElementById("customCursor");
+// Track mouse movement and position the custom cursor
+document.addEventListener("mousemove", (e) => {
+  customCursor.style.left = e.pageX + "px";
+  customCursor.style.top = e.pageY + "px";
+});
   </script>
 </body>
 </html>
